@@ -1,0 +1,21 @@
+libname uspop "/home/u44080474/USPopulation";
+options validvarname=v7;
+proc import datafile="/home/u44080474/USPopulation/USpopulationRace.xlsx" 
+out=uspop.uspop2020 dbms=xlsx replace;
+run;
+proc freq data=uspop.uspop2020;
+table Black_or_African_American_alone*(_all_) / list missing nocum;
+run;
+proc freq data=uspop.uspop2020 order=freq;
+tables Black_or_African_American_alone*States / list missing nocum 
+out=uspop.sorteduspop;
+run;
+proc sort data=uspop.sorteduspop;
+by descending Black_or_African_American_alone;
+run;
+proc freq data=uspop.sorteduspop;
+tables Black_or_African_American_alone*States / list missing nocum;
+run;
+proc export data=uspop.sorteduspop dbms=xlsx 
+outfile="/home/u44080474/USPopulation/uspo2020sortedblacks.xlsx" replace;
+run;
